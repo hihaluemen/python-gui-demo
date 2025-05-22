@@ -1,4 +1,4 @@
-import PyQt5.QtWidgets as qtWidgets
+import PyQt6.QtWidgets as qtWidgets
 
 class LoginDialog(qtWidgets.QDialog):
     def __init__(self, parent=None):
@@ -12,13 +12,16 @@ class LoginDialog(qtWidgets.QDialog):
         # 创建用户名和密码输入框
         self.username_input = qtWidgets.QLineEdit()
         self.password_input = qtWidgets.QLineEdit()
-        self.password_input.setEchoMode(qtWidgets.QLineEdit.Password)
+        self.password_input.setEchoMode(qtWidgets.QLineEdit.EchoMode.Password)
 
         layout.addRow("用户名:", self.username_input)
         layout.addRow("密码:", self.password_input)
 
         # 创建按钮
-        button_box = qtWidgets.QDialogButtonBox(qtWidgets.QDialogButtonBox.Ok | qtWidgets.QDialogButtonBox.Cancel)
+        button_box = qtWidgets.QDialogButtonBox(
+            qtWidgets.QDialogButtonBox.StandardButton.Ok
+            | qtWidgets.QDialogButtonBox.StandardButton.Cancel
+        )
         button_box.accepted.connect(self.verify_login)
         button_box.rejected.connect(self.reject)
 
@@ -63,4 +66,9 @@ class LoginDialog(qtWidgets.QDialog):
             self.user_name = current_user_info["user_name"]
             self.accept()  # 验证成功
         else:
-            qtWidgets.QMessageBox.warning(self, "验证失败", "用户名或密码错误！", qtWidgets.QMessageBox.Ok)
+            qtWidgets.QMessageBox.warning(
+                self,
+                "验证失败",
+                "用户名或密码错误！",
+                qtWidgets.QMessageBox.StandardButton.Ok,
+            )
