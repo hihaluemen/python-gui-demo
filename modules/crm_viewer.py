@@ -1,8 +1,8 @@
-import PyQt5.QtWidgets as qtWidgets
-import PyQt5.QtCore as qtCore
-import PyQt5.QtWebEngineWidgets as qtWebEngineWidgets
+import PyQt6.QtWidgets as qtWidgets
+import PyQt6.QtCore as qtCore
+import PyQt6.QtWebEngineWidgets as qtWebEngineWidgets
 import qt_material
-from PyQt5.QtWebEngineWidgets import QWebEnginePage
+from PyQt6.QtWebEngineWidgets import QWebEnginePage
 
 class MyWebEnginePage(QWebEnginePage):
     def javaScriptConsoleMessage(self, level, message, lineNumber, sourceID):
@@ -79,7 +79,9 @@ class CRMViewer(qtWidgets.QMainWindow):
         
         # 用户信息
         user_info = qtWidgets.QLabel(f"{self.sales_name}")
-        title_bar_layout.addWidget(user_info, alignment=qtCore.Qt.AlignRight)
+        title_bar_layout.addWidget(
+            user_info, alignment=qtCore.Qt.AlignmentFlag.AlignRight
+        )
         
         self.main_layout.addWidget(title_bar)
     
@@ -145,8 +147,14 @@ class CRMViewer(qtWidgets.QMainWindow):
         # 用自定义的 Page
         self.web_view.setPage(MyWebEnginePage(self.web_view))
         settings = self.web_view.settings()
-        settings.setAttribute(qtWebEngineWidgets.QWebEngineSettings.LocalStorageEnabled, True)
-        settings.setAttribute(qtWebEngineWidgets.QWebEngineSettings.JavascriptEnabled, True)
+        settings.setAttribute(
+            qtWebEngineWidgets.QWebEngineSettings.WebAttribute.LocalStorageEnabled,
+            True,
+        )
+        settings.setAttribute(
+            qtWebEngineWidgets.QWebEngineSettings.WebAttribute.JavascriptEnabled,
+            True,
+        )
         # 清除缓存
         profile = qtWebEngineWidgets.QWebEngineProfile.defaultProfile()
         profile.clearHttpCache()
@@ -218,11 +226,21 @@ class CRMViewer(qtWidgets.QMainWindow):
             success = self.update_status(new_status)
             if success:
                 self.current_status = new_status
-                qtWidgets.QMessageBox.information(self, "状态更新", f"状态已更新为: {self.status_combo.currentText()}", qtWidgets.QMessageBox.Ok)
+                qtWidgets.QMessageBox.information(
+                    self,
+                    "状态更新",
+                    f"状态已更新为: {self.status_combo.currentText()}",
+                    qtWidgets.QMessageBox.StandardButton.Ok,
+                )
             else:
                 # 更新失败，恢复原状态
                 self.status_combo.setCurrentIndex(self.current_status)
-                qtWidgets.QMessageBox.warning(self, "状态更新", "状态更新失败，请稍后重试", qtWidgets.QMessageBox.Ok)
+                qtWidgets.QMessageBox.warning(
+                    self,
+                    "状态更新",
+                    "状态更新失败，请稍后重试",
+                    qtWidgets.QMessageBox.StandardButton.Ok,
+                )
     
     def refresh_status(self):
         """刷新按钮点击事件"""
@@ -237,9 +255,19 @@ class CRMViewer(qtWidgets.QMainWindow):
             self.status_combo.setCurrentIndex(status)
             # 更新客户名称标签
             self.customer_name_label.setText(customer_name if customer_name else "暂无客户")
-            qtWidgets.QMessageBox.information(self, "状态刷新", f"当前客户ID: {customer_id}\n当前客户: {customer_name}\n当前状态: {self.status_combo.currentText()}", qtWidgets.QMessageBox.Ok)
+            qtWidgets.QMessageBox.information(
+                self,
+                "状态刷新",
+                f"当前客户ID: {customer_id}\n当前客户: {customer_name}\n当前状态: {self.status_combo.currentText()}",
+                qtWidgets.QMessageBox.StandardButton.Ok,
+            )
         else:
-            qtWidgets.QMessageBox.warning(self, "状态刷新", "获取当前状态失败，请稍后重试", qtWidgets.QMessageBox.Ok)
+            qtWidgets.QMessageBox.warning(
+                self,
+                "状态刷新",
+                "获取当前状态失败，请稍后重试",
+                qtWidgets.QMessageBox.StandardButton.Ok,
+            )
     
     def show_user_info(self):
         """显示用户信息"""
@@ -286,7 +314,7 @@ class CRMViewer(qtWidgets.QMainWindow):
         
         # 分隔线
         line = qtWidgets.QFrame()
-        line.setFrameShape(qtWidgets.QFrame.HLine)
+        line.setFrameShape(qtWidgets.QFrame.Shape.HLine)
         layout.addWidget(line)
         
         # 用户信息
@@ -304,7 +332,7 @@ class CRMViewer(qtWidgets.QMainWindow):
         button.clicked.connect(info_dialog.accept)
         layout.addWidget(button)
         
-        info_dialog.exec_()
+        info_dialog.exec()
     
     def adjust_window_size(self):
         """根据网页内容调整窗口大小"""
